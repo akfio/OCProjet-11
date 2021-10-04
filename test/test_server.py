@@ -23,6 +23,8 @@ def test_purchase_correct_number(client):
     assert expected.encode() in result.data
     assert b'Great-booking complete!' in result.data
 
+"""
+
 
 def test_purchase_asking_more_than_12(client):
     data_2 = {'competition': 'Test Event', 'club': 'Simply Lift', 'places': 13}
@@ -44,7 +46,7 @@ def test_purchase_club_asking_too_much(client):
     assert b'PAS ASSEZ DE POINTS DISPONIBLE' in result.data
 
 
-"""
+
 class Test_purchase(unittest.TestCase):
     url = 'http://127.0.0.1:5000/purchasePlaces'
 
