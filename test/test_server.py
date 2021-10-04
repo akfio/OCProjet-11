@@ -14,16 +14,6 @@ def client():
     yield client
 
 
-def test_purchase_correct_number(client):
-    data_1 = {'competition': 'Test Event', 'club': 'She Lifts', 'places': 12}
-    club_1 = {"name": "She Lifts", "email": "kate@shelifts.co.uk", "points": "12"}
-    result = client.post('/purchasePlaces', data=data_1)
-    total_points = int(club_1["points"]) - int(data_1["places"])
-    expected = 'Points available: ' + str(total_points)
-    assert expected.encode() in result.data
-    assert b'Great-booking complete!' in result.data
-
-
 def test_purchase_asking_more_than_12(client):
     data_2 = {'competition': 'Test Event', 'club': 'Simply Lift', 'places': 13}
     club_2 = {"name": "Simply Lift", "email": "john@simplylift.co", "points": "13"}
@@ -34,6 +24,20 @@ def test_purchase_asking_more_than_12(client):
     assert b'PAS PLUS DE 12 PLACES PAR CLUB' in result.data
 
 
+
+
+"""
+
+def test_purchase_correct_number(client):
+    data_1 = {'competition': 'Test Event', 'club': 'She Lifts', 'places': 12}
+    club_1 = {"name": "She Lifts", "email": "kate@shelifts.co.uk", "points": "12"}
+    result = client.post('/purchasePlaces', data=data_1)
+    total_points = int(club_1["points"]) - int(data_1["places"])
+    expected = 'Points available: ' + str(total_points)
+    assert expected.encode() in result.data
+    assert b'Great-booking complete!' in result.data
+    
+    
 def test_purchase_club_asking_too_much(client):
     data_3 = {'competition': 'Test Event', 'club': 'Iron Temple', 'places': 8}
     club_3 = {"name": "Iron Temple", "email": "admin@irontemple.com", "points": "4"}
@@ -43,8 +47,6 @@ def test_purchase_club_asking_too_much(client):
     assert expected.encode() in result.data
     assert b'PAS ASSEZ DE POINTS DISPONIBLE' in result.data
 
-
-"""
 class Test_purchase(unittest.TestCase):
     url = 'http://127.0.0.1:5000/purchasePlaces'
 
