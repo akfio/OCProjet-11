@@ -1,8 +1,3 @@
-import unittest
-from unittest.mock import patch
-import requests
-from flask import request, jsonify
-
 import pytest
 from server import app
 
@@ -13,6 +8,18 @@ def client():
     client = app.test_client()
     yield client
 
+
+def test_purchase_club_asking_too_much(client):
+    data_3 = {'competition': 'Test Event', 'club': 'Iron Temple', 'places': 8}
+    club_3 = {"name": "Iron Temple", "email": "admin@irontemple.com", "points": "4"}
+    result = client.post('/purchasePlaces', data=data_3)
+    total_points = int(club_3["points"])
+    expected = 'Points available: ' + str(total_points)
+    assert expected.encode() in result.data
+    assert b'PAS ASSEZ DE POINTS DISPONIBLE' in result.data
+
+
+"""
 
 def test_purchase_correct_number(client):
     data_1 = {'competition': 'Test Event', 'club': 'She Lifts', 'places': 12}
@@ -32,19 +39,23 @@ def test_purchase_asking_more_than_12(client):
     expected = 'Points available: ' + str(total_points)
     assert expected.encode() in result.data
     assert b'PAS PLUS DE 12 PLACES PAR CLUB' in result.data
-
-
-def test_purchase_club_asking_too_much(client):
-    data_3 = {'competition': 'Test Event', 'club': 'Iron Temple', 'places': 8}
-    club_3 = {"name": "Iron Temple", "email": "admin@irontemple.com", "points": "4"}
-    result = client.post('/purchasePlaces', data=data_3)
-    total_points = int(club_3["points"])
-    expected = 'Points available: ' + str(total_points)
-    assert expected.encode() in result.data
-    assert b'PAS ASSEZ DE POINTS DISPONIBLE' in result.data
-
-
-"""
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 class Test_purchase(unittest.TestCase):
     url = 'http://127.0.0.1:5000/purchasePlaces'
 
