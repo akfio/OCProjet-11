@@ -4,6 +4,8 @@ import requests
 from flask import request, jsonify
 
 import pytest
+
+import server
 from server import app
 
 
@@ -22,8 +24,6 @@ def test_purchase_asking_more_than_12(client):
     expected = 'Points available: ' + str(total_points)
     assert expected.encode() in result.data
     assert b'PAS PLUS DE 12 PLACES PAR CLUB' in result.data
-
-
 
 
 """
