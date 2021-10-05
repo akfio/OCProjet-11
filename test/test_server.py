@@ -4,6 +4,8 @@ import requests
 from flask import request, jsonify
 
 import pytest
+
+import server
 from server import app
 
 
@@ -13,15 +15,23 @@ def client():
     client = app.test_client()
     yield client
 
+@pytest.fixture
+def competition():
+    competition = "Test Event"
+    return competition
 
-def test_purchase_correct_number(client):
-    data_1 = {'competition': 'Test Event', 'club': 'She Lifts', 'places': 12}
-    club_1 = {"name": "She Lifts", "email": "kate@shelifts.co.uk", "points": "12"}
-    result = client.post('/purchasePlaces', data=data_1)
-    total_points = int(club_1["points"]) - int(data_1["places"])
-    expected = 'Points available: ' + str(total_points)
-    assert expected.encode() in result.data
-    assert b'Great-booking complete!' in result.data
+@pytest.fixture
+def club():
+    club = "She Lifts"
+    return club
+
+
+def test_try_to_purchase_ended_competition(client, competition, club):
+    result = client.get('/book/<competition>/<club>', query_string={'competition': competition, 'club': club})
+    assert b'COMPETITION OVER' in result.data
+
+"""
+
 
 
 def test_purchase_asking_more_than_12(client):
@@ -43,8 +53,6 @@ def test_purchase_club_asking_too_much(client):
     assert expected.encode() in result.data
     assert b'PAS ASSEZ DE POINTS DISPONIBLE' in result.data
 
-
-"""
 class Test_purchase(unittest.TestCase):
     url = 'http://127.0.0.1:5000/purchasePlaces'
 
