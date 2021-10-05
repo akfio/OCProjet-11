@@ -14,6 +14,12 @@ def client():
     yield client
 
 
+@pytest.fixture
+def club():
+    club = "She Lifts"
+    return club
+
+
 def test_purchase_correct_number(client):
     data_1 = {'competition': 'Test Event', 'club': 'She Lifts', 'places': 12}
     club_1 = {"name": "She Lifts", "email": "kate@shelifts.co.uk", "points": "12"}
@@ -42,6 +48,19 @@ def test_purchase_club_asking_too_much(client):
     expected = 'Points available: ' + str(total_points)
     assert expected.encode() in result.data
     assert b'PAS ASSEZ DE POINTS DISPONIBLE' in result.data
+
+
+def test_try_to_purchase_ended_competition(client, club):
+    competition = 'Fall Classic'
+    result = client.get('/book/'+str(competition)+'/'+str(club))
+    assert b'COMPETITION OVER' in result.data
+
+
+def test_try_to_purchase_valid_competition(client, club):
+    competition = 'Test Event'
+    result = client.get('/book/'+str(competition)+'/'+str(club))
+    expected = 'Booking for ' + competition
+    assert expected.encode() in result.data
 
 
 """
