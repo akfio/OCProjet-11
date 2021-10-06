@@ -15,9 +15,44 @@ def client():
 
 
 @pytest.fixture
-def club():
-    club = "She Lifts"
-    return club
+def club_fixture():
+    data = {
+        "name": "Iron Temple",
+        "email": "admin@irontemple.com",
+        "points": "4"
+    }
+    return data
+
+
+@pytest.fixture
+def invalid_club_fixture(club_fixture):
+    club_fixture["email"] = "invalid@gmail.com"
+    return club_fixture
+
+
+def test_login_with_invalid_email(client, invalid_club_fixture):
+    result = client.post('/showSummary', data=invalid_club_fixture)
+    expected = "Sorry, that email was not found."
+    assert b'Welcome to the GUDLFT Registration Portal!' in result.data
+    assert expected.encode() in result.data
+
+
+def test_login_with_valid_email(client, club_fixture):
+    result = client.post('/showSummary', data=club_fixture)
+    expected = "Welcome, " + str(club_fixture["email"])
+    assert expected.encode() in result.data
+
+
+
+
+
+
+
+
+"""
+
+
+
 
 
 def test_purchase_correct_number(client):
@@ -63,7 +98,12 @@ def test_try_to_purchase_valid_competition(client, club):
     assert expected.encode() in result.data
 
 
-"""
+@pytest.fixture
+def club():
+    club = "She Lifts"
+    return club
+
+
 class Test_purchase(unittest.TestCase):
     url = 'http://127.0.0.1:5000/purchasePlaces'
 
