@@ -19,6 +19,25 @@ def club_fixture():
     return data
 
 
+def test_points_display(client, club_fixture):
+    result = client.get('/points')
+    expected_name = club_fixture['name']
+    expected_points = str(club_fixture['points'])
+    assert expected_name.encode() in result.data
+    assert expected_points.encode() in result.data
+
+
+
+def test_points_display_after_purchase(client, club_fixture):
+    data_1 = {'competition': 'Test Event', 'club': club_fixture['name'], 'places': 2}
+    client.post('/purchasePlaces', data=data_1)
+    new_points = str(int(club_fixture["points"]) - int(data_1["places"]))
+    result = client.get('/points')
+    assert new_points.encode() in result.data
+"""
+
+
+
 @pytest.fixture
 def invalid_club_fixture(club_fixture):
     club_fixture["email"] = "invalid@gmail.com"
@@ -80,8 +99,6 @@ def test_try_to_purchase_valid_competition(client, club_fixture):
     expected = 'Booking for ' + competition
     assert expected.encode() in result.data
 
-
-"""
 class Test_purchase(unittest.TestCase):
     url = 'http://127.0.0.1:5000/purchasePlaces'
 
