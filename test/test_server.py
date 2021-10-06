@@ -82,6 +82,15 @@ def test_try_to_purchase_valid_competition(client, club_fixture):
 
 
 """
+
+
+
+
+
+
+
+
+
 class Test_purchase(unittest.TestCase):
     url = 'http://127.0.0.1:5000/purchasePlaces'
 

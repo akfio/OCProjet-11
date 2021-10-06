@@ -31,7 +31,7 @@ def index():
 def showSummary():
     try:
         club = [club for club in clubs if club['email'] == request.form['email']][0]
-        return render_template('welcome.html', club=club, competitions=competitions)
+        return render_template('welcome.html', club=club, competitions=competitions, clubs=clubs)
     except:
         flash("Sorry, that email was not found.")
         return render_template('index.html')
@@ -49,7 +49,7 @@ def book(competition, club):
             return render_template('booking.html', club=foundClub, competition=foundCompetition)
     else:
         flash("COMPETITION OVER")
-        return render_template('welcome.html', club=club, competitions=competitions)
+        return render_template('welcome.html', club=club, competitions=competitions, clubs=clubs)
 
 
 @app.route('/purchasePlaces', methods=['POST'])
